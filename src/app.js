@@ -1,5 +1,5 @@
 import express from "express"
-import cookieParse from "cookies-parser"
+import cookieParse from "cookie-parser"
 import cors from "cors"
 
 const app = express();
@@ -9,5 +9,6 @@ app.use(cors({
     credentials:true
 }))
 
+app.use(cookieParse())
 
 export {app}

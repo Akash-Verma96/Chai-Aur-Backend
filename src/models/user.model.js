@@ -58,20 +58,20 @@ const userSchema = new Schema(
 userSchema.pre("save", async function (next){
     if(!this.isModified("password")) return next();
 
-    this.password = bcrypt.hash(this.password, 10)
+    this.password = await bcrypt.hash(this.password, 10)
     next()
 })
 
 // adding our own methon in mongoose to check password
 
 userSchema.methods.isPasswordCorrect = async function(password){
-    return await bcrypt.compare(password, this.password) // inbuild method in bcrypt returns true or false
+    return await bcrypt.compare(password, this.password) // inbuilt method in bcrypt returns true or false
 }
 
 userSchema.methods.generateAccessToken = function(){
     return jwt.sign(
         {
-            _id:true._id,
+            _id:this._id,
             email: this.email,
             userName : this.userName,
             fullName : this.fullName
@@ -85,7 +85,7 @@ userSchema.methods.generateAccessToken = function(){
 userSchema.methods.generateRefreshToken = function(){
     return jwt.sign(
         {
-            _id:true._id,
+            _id:this._id,
         },
         process.env.REFRESH_TOKEN_SECRET,
         {
